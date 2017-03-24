@@ -2,7 +2,30 @@
 <html>
 <head>
 </head>
-<body>
-<div class = "bg-color">Whatsup</div>
+<body class = "home-wrapper">
+
+<div class="container">	
+	<div class="row">
+		<div class="twelve columns">
+			<span class = "uniride-heading">UniRide</span>
+		</div>
+	</div>
+</div>
+
+<span class = "white-space">
+<div class="container">	
+  	<div class="row">
+		<div class="twelve columns">			
+  		<%= link_to "Sign In", log_in_url, :class=>"button"%>
+		</div>
+  	</div>
+
+  	<div class="row">
+		<div class="twelve columns">			
+  		<%= link_to "Sign Up", sign_up_url, :class=>"button"%>
+		</div>
+  	</div>
+</div>
+</span>
 </body>
 </html> 
