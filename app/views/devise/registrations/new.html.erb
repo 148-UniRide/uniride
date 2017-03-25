@@ -18,7 +18,7 @@
   <div class="row">
     <div class="twelve columns">
     <%= f.label :email, :style=>"text-align: left" %>
-    <%= f.email_field :email, autofocus: true %>
+    <%= f.email_field :email, autofocus: true, :style=>"color:#167fa0" %>
     </div>
   </div>
 
@@ -28,14 +28,14 @@
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %>
-    <%= f.password_field :password, autocomplete: "off" %>
+    <%= f.password_field :password, autocomplete: "off", :style=>"color:#167fa0" %>
     </div>
   </div>
 
   <div class="row">
     <div class="twelve columns">
     <%= f.label :password_confirmation, :style=>"text-align: left" %>
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", :style=>"color:#167fa0" %>
     </div>
   </div>
 
