@@ -1,26 +1,46 @@
+<body class = "devise-wrapper">
+
+<div class="container"> 
+  <div class="row">
+    <div class="twelve columns">
+      <span class = "uniride-heading">UniRide</span>
+    </div>
+  </div>
+</div>
+
+<div class = "container devise-form">
+
 <h2>Log in</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
-
-  <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+  <div class="row">
+    <div class="twelve columns">
+      <%= f.label :email, :style=>"text-align: left" %>
+      <%= f.email_field :email, autofocus: true %>
     </div>
-  <% end -%>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
   </div>
+
+  <div class="row">
+    <div class="twelve columns">
+      <%= f.label :password, :style=>"text-align: left" %>
+      <%= f.password_field :password, autocomplete: "off" %>
+    </div>
+  </div>
+
+    <% if devise_mapping.rememberable? -%>
+    <div class="row">
+      <div class="twelve columns">
+        <%= f.check_box :remember_me, :style=>"text-align: left" %>
+        <span class="label-body">Remember Me</span>
+      </div>
+    </div>
+    <% end -%>
+    <%= f.submit "Log in", :class=>"button-primary" %>
 <% end %>
 
-<%= render "devise/shared/links" %>
+<span class="twelve columns line"></span>
+<%= link_to "Sign Up", sign_up_url, :class=>"button"%>
+<%= link_to "Forgot your password?", new_password_path('user'), :class=>"button" %>
+</div>
+
+</body>
