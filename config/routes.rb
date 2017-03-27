@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  match 'profile', to: 'users#profile', via: [:get]
+
 	devise_for :users, controllers: { registrations: "registrations" }
 	root to: "home#home_page"
 
@@ -12,6 +14,8 @@ Rails.application.routes.draw do
 
 	devise_scope :user do
   		delete 'logout', to: 'devise/sessions#destroy'
-	end
+	end	
+	
+	match '/:id', to: 'users#show#:id', via: [:get] 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
