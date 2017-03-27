@@ -1,6 +1,6 @@
 <body class = "devise-wrapper">
 
-<div class="container"> 
+<div class="container">
   <div class="row">
     <div class="twelve columns">
       <span class = "uniride-heading">UniRide</span>
@@ -21,6 +21,20 @@
     <%= f.email_field :email, autofocus: true, :style=>"color:#167fa0" %>
     </div>
   </div>
+
+  <div class="row">
+    <div class="twelve columns">
+    <%= f.label :firstName, :style=>"text-align: left" %>
+    <%= f.text_field :firstName, autofocus: true, :style=>"color:#167fa0" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="twelve columns">
+    <%= f.label :lastName, :style=>"text-align: left" %>
+    <%= f.text_field :lastName, autofocus: true, :style=>"color:#167fa0" %>
+    </div>
+  </div> 
 
   <div class="row">
     <div class="twelve columns">
