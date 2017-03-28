@@ -1,5 +1,6 @@
 class DeviseCreateUsers < ActiveRecord::Migration[5.0]
   def change
+    drop_table :users
     create_table :users do |t|
       #First and Last name
       t.string :firstName
