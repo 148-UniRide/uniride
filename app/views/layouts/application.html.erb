@@ -12,8 +12,20 @@
   </head>
 
   <body>
-	<p class="notice"><%= notice %></p>
-	<p class="alert"><%= alert %></p>
+  	<div class="alert-notice"><p class="notice"><%= notice %></p></div>
+
+  	<div class="alert-error"><p class="alert">
+      <% if alert %>
+        <button class="close"> × </button>
+        <%= alert %>
+      <script>      
+        $(".close").click(function(){
+          $(".alert-error").hide();
+        });
+      </script>
+      <% end %>
+    </p></div>
+
     <%= yield %>
   </body>
 </html>

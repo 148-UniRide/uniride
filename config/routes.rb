@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  match 'profile', to: 'users#profile', via: [:get]
+	match 'user_root' => 'users#profile', :as => :user_root, via: [:get]
+  	
+  	match 'profile', to: 'users#profile', via: [:get]
 
 	devise_for :users, controllers: { registrations: "registrations" }
 	root to: "home#home_page"

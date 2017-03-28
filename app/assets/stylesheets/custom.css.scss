@@ -1,0 +1,47 @@
+/*flash*/
+.alert-error {
+    background-color: #BA3550;
+    border: none;
+    position: relative;
+    top: -25px;
+    color: #f7f7f7;
+    text-align: center;
+    width: 90%;
+    margin: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 5px #000;
+ }
+
+.alert-alert {
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
+    text-align: center;
+ }
+
+.alert-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #468847;
+    text-align: center;
+ }
+
+.alert-notice {
+    background-color: #212D40;
+    border: none;
+    color: #f7f7f7;
+    text-align: center;
+    width: 90%;
+    margin: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 5px #000;
+ }
+
+ .alert .close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 35px;
+    border: none;
+    outline: none;
+ }
