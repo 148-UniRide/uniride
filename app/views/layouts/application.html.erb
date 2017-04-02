@@ -12,8 +12,9 @@
   </head>
 
   <body>
+  <% unless user_signed_in?%> 
   	<div class="alert-notice"><p class="notice"><%= notice %></p></div>
-
+  <% end %>
   	<div class="alert-error"><p class="alert">
       <% if alert %>
         <button class="close"> × </button>

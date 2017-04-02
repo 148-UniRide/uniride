@@ -1,2 +1,54 @@
-<h1>Users#profile</h1>
-<p><%= current_user.firstName%></p>
+<body class="profile-wrapper">
+<div class="container">	
+  	<div class="row">
+		<div class="twelve columns">
+			<div class="photo"></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="twelve columns">	
+			<div class="name">
+				<%= current_user.firstName%> <%= current_user.lastName%>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">	
+		<div class="container" id="user-info">	
+			<div class="row">
+				<div class="four columns" id="profile">
+					Profile
+				</div>
+				<div class="four columns" id="posts">
+					Posts
+				</div>
+				<div class="four columns" id="trips">
+					Trips
+				</div>
+			</div>
+			<script type="text/javascript">
+				$("#profile").click(function() {
+					$("#posts").removeClass("selected");
+				    $("#trips").removeClass("selected");
+				    $(this).toggleClass("selected");
+				});
+
+				$("#posts").click(function() {
+					$("#profile").removeClass("selected");
+				    $("#trips").removeClass("selected");
+				    $(this).toggleClass("selected");
+				});
+
+				$("#trips").click(function() {
+					$("#posts").removeClass("selected");
+				    $("#profile").removeClass("selected");
+				    $(this).toggleClass("selected");
+				});
+			</script>
+			<div class="row">
+				<div id="show-info"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
