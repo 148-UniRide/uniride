@@ -13,7 +13,7 @@
 
 <h2>Sign up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name, html: {multipart: true})) do |f| %>
 
   <div class="row">
     <div class="twelve columns">
@@ -25,16 +25,23 @@
   <div class="row">
     <div class="twelve columns">
     <%= f.label "First Name", :style=>"text-align: left" %>
-    <%= f.text_field :firstName, autofocus: true, :style=>"color:#167fa0" %>
+    <%= f.text_field :firstName, :style=>"color:#167fa0" %>
     </div>
   </div>
 
   <div class="row">
     <div class="twelve columns">
     <%= f.label "Last Name", :style=>"text-align: left" %>
-    <%= f.text_field :lastName, autofocus: true, :style=>"color:#167fa0" %>
+    <%= f.text_field :lastName, :style=>"color:#167fa0" %>
     </div>
   </div> 
+
+  <div class="row">
+    <div class="twelve columns">
+    <%= f.label "Profile Photo", :style=>"text-align: left" %>
+    <%= f.file_field :avatar, :style=>"color:#167fa0" %>
+    </div>
+  </div>
 
   <div class="row">
     <div class="twelve columns">

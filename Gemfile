@@ -5,6 +5,9 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+#carrierwave: image uploader
+gem 'carrierwave', '~> 1.0'
+
 #for devise (used for loging in and stuff)
 gem 'devise'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
