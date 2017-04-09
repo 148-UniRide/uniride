@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+
   def show
   	if user_signed_in?
   		current_id = current_user.id.to_i

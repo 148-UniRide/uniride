@@ -2,18 +2,17 @@
 <div class="container">	
   	<div class="row">
 		<div class="twelve columns">
-		<% if false %>
 			<div class="photo">
 				<%= image_tag(current_user.avatar.url, :height=>"220px")%>	
 			</div>
-		<%end%>
 		</div>
 	</div>
 	<div class="row">
 		<div class="twelve columns">	
 			<div class="name">
-				<%= current_user.firstName%> <%= current_user.lastName%>
+				<%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%>
 			</div>
+				<%= link_to "Edit", edit_user_registration_path, :class=>"button" %>
 		</div>
 	</div>
 
