@@ -20,5 +20,31 @@
   <%= @post.user.firstName %>
 </p>
 
+<p>
+  <strong>Address:</strong>
+  <% @addresses.each do |address| %>
+  	<p>
+  	  <strong>Street:</strong>
+	  <%= address.street %>
+	</p>
+
+	<p>
+	  <strong>City:</strong>
+	  <%= address.city %>
+	</p>
+
+	<p>
+	  <strong>State:</strong>
+	  <%= address.state %>
+	</p>
+
+	<p>
+	  <strong>Zip:</strong>
+	  <%= address.zip %>
+	</p>
+
+  <%end%>
+</p>
+
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>

@@ -32,6 +32,25 @@
 			<div class="row">
 				<div id="show-info"></div>
 			</div>
+
+			<script type="text/javascript">
+				$("#profile").click(function() {
+					$("#posts").removeClass("selected");
+					$("#trips").removeClass("selected");
+					$(this).addClass("selected");
+				});
+				$("#posts").click(function() {
+					$("#profile").removeClass("selected");
+					$("#trips").removeClass("selected");
+					$(this).addClass("selected");
+				});
+
+				$("#trips").click(function() {
+					$("#posts").removeClass("selected");
+					$("#profile").removeClass("selected");
+					$(this).addClass("selected");
+				});
+			</script>
 		</div>
 	</div>
 </div>

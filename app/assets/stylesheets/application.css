@@ -17,9 +17,59 @@
  */
 
 body{
+  width: 100%;
 	font-family: 'Raleway', sans-serif;
 }
 
 input{
 	color: #000;
+}
+
+textarea{
+	color: #000;
+}
+
+select{
+	color: #000;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #909;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #909;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #909;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #909;
+}
+
+.one-sixth{
+  border: solid;
+}
+
+#navbar .container-nav{
+  display: block;
+  width: 100%;
+  background-color: #1EAEDB;
+}
+
+.uniride-nav{
+  color: #f7f7f7;
+  font-family: 'Lobster', cursive;
+  font-size: 25px;
+  margin-left: 30px;
+}
+
+#navbar .nav-element{
+  cursor: pointer;
+  position: relative;
+  top: 5px;
+  color: #f7f7f7;
+  font-size: 1.2vw;
+  text-transform: uppercase;
 }

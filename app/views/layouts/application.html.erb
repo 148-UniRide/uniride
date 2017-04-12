@@ -13,6 +13,37 @@
   </head>
 
   <body>
+  <span id="navbar">
+    <div class="container-nav">
+      <div class="row">
+        <div class="one-half column"><span class="uniride-nav u-pull-left">
+          UniRide
+        </span></div>
+        <div class="one-half column">
+          <div class="three columns">
+            <span class="nav-element">
+            Feed
+            </span>
+          </div>
+          <div class="three columns">
+            <span class="nav-element">
+            Profile
+            </span>
+          </div>
+          <div class="three columns">
+            <span class="nav-element">
+            Account
+            </span>
+          </div>
+          <div class="three columns">
+            <span class="nav-element">
+            Search
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </span>
   <% unless user_signed_in?%> 
   	<div class="alert-notice"><p class="notice"><%= notice %></p></div>
   <% end %>
