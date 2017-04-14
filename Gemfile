@@ -5,6 +5,9 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+#dynamic forms
+gem "cocoon"
+
 #carrierwave: image uploader
 gem 'carrierwave', '~> 1.0'
 

@@ -17,7 +17,6 @@
  */
 
 body{
-  width: 100%;
 	font-family: 'Raleway', sans-serif;
 }
 
@@ -48,28 +47,31 @@ select{
    color:    #909;
 }
 
-.one-sixth{
-  border: solid;
-}
-
-#navbar .container-nav{
+.container-nav{
   display: block;
+  position: fixed;
+  top: 0;
   width: 100%;
   background-color: #1EAEDB;
+  margin-bottom: 20px !important;
+  z-index: 999;
+  text-align: center;
 }
 
-.uniride-nav{
+.container-nav .uniride-nav{
   color: #f7f7f7;
   font-family: 'Lobster', cursive;
   font-size: 25px;
   margin-left: 30px;
+  text-decoration: none;
 }
 
-#navbar .nav-element{
-  cursor: pointer;
+.container-nav .nav-element{
   position: relative;
+  cursor: pointer;
   top: 5px;
   color: #f7f7f7;
-  font-size: 1.2vw;
+  font-size: 18px;
   text-transform: uppercase;
+  text-decoration: none;
 }

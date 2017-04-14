@@ -15,8 +15,9 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
+    @added=false
     @post = Post.new
-    @post.addresses.build
+    @post.addresses.new
   end
 
   # GET /posts/1/edit
@@ -72,7 +73,7 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:_destroy, :title, :description, :date, 
-        addresses_attributes: [:id, :street, :city, :state, :zip])
+      params.require(:post).permit(:title, :description, :date, 
+        addresses_attributes: [:id, :street, :city, :state, :zip, :_destroy])
     end
 end

@@ -1,0 +1,26 @@
+<div class="nested-fields">
+  <div class="row">
+      <div class="five columns">
+        <%= f.label :street %>
+        <%= f.text_field :street, :class=>"u-full-width" %>
+      </div>
+
+      <div class="three columns">
+        <%= f.label :city %>
+        <%= f.text_field :city, :class=>"u-full-width" %>
+      </div>
+
+      <div class="two columns">
+        <%= f.label :state %>
+        <%= f.text_field :state, :class=>"u-full-width" %>
+      </div>
+
+      <div class="two columns">
+        <%= f.label :zip %>
+        <%= f.text_field :zip, :class=>"u-full-width" %>
+      </div>
+  </div>
+  <%if @added %>
+    <%= link_to_remove_association('remove this', f) %>
+  <%end%>
+</div>

@@ -13,37 +13,28 @@
   </head>
 
   <body>
-  <span id="navbar">
-    <div class="container-nav">
+  <div class="container-nav">
       <div class="row">
-        <div class="one-half column"><span class="uniride-nav u-pull-left">
-          UniRide
-        </span></div>
-        <div class="one-half column">
-          <div class="three columns">
-            <span class="nav-element">
+        <div class="four columns">
+          <%=link_to 'UniRide', profile_url, :class=>"uniride-nav u-pull-left" %></div>
+        <div class="two columns">
+          <span class="nav-element">
             Feed
-            </span>
-          </div>
-          <div class="three columns">
-            <span class="nav-element">
-            Profile
-            </span>
-          </div>
-          <div class="three columns">
-            <span class="nav-element">
-            Account
-            </span>
-          </div>
-          <div class="three columns">
-            <span class="nav-element">
+          </span>
+        </div>
+        <div class="two columns">
+          <%= link_to'Profile', profile_url, :class => "nav-element" %>
+        </div>
+        <div class="two columns">
+          <%= link_to 'Account', edit_user_registration_url, :class=>"nav-element" %>
+        </div>
+        <div class="two columns">
+          <span class="nav-element">
             Search
-            </span>
-          </div>
+          </span>
         </div>
       </div>
-    </div>
-  </span>
+  </div>
   <% unless user_signed_in?%> 
   	<div class="alert-notice"><p class="notice"><%= notice %></p></div>
   <% end %>

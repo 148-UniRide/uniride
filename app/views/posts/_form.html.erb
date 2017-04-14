@@ -26,10 +26,16 @@
     <%= f.date_select :date %>
   </div>
 
-  <%= f.fields_for :addresses do |g| %>
-    <%= render(:partial=>"address", :locals=>{:g => g}) %>
+  <%= f.fields_for :addresses do |address| %>
+    <h4>Source</h4>
+    <%= render 'address_fields', f: address %>
+    <h4>Destination</h4>
+    <%= render 'address_fields', f: address %>
   <% end %>
-
+  <h5>Detours</h5>
+  <div class='links'>
+    <%= link_to_add_association 'add detour', f, :addresses%>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
