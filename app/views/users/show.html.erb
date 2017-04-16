@@ -8,6 +8,14 @@
 		</div>
 	</div>
 	
+	<div class="row">
+		<div class="twelve columns">	
+			<div class="name">
+				<%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%>
+			</div>
+		</div>
+	</div>
+
 	<div class="row">	
 		<div class="container" id="user-info">	
 			<div class="row">
@@ -39,23 +47,20 @@
 			<div class="row">
 				<div id="post-info">
 					<div class="row">
-					  		These are your posts:-
+					  		These are <%=first_letter_uppercase current_user.firstName%> <%=first_letter_uppercase current_user.lastName%>'s posts:-
 					  		<div class ="row">
 									<%= Post.where(:user_id => @current_user.id()).each do |p|
 										p.title 
 										p.created_at
 									end%>
 							</div>
-					  		<div class="twelve columns">
-					  			<%= link_to "New Post", new_post_url, :class=>"button"%>
-					  		</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div id="trips-info">
-					
+					These are <%=first_letter_uppercase current_user.firstName%> <%=first_letter_uppercase current_user.lastName%>'s trips:-
 				</div>
 			</div>
 
