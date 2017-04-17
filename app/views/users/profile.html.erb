@@ -49,10 +49,10 @@
 					<div class="row">
 					  		These are your posts:-
 					  		<div class ="row">
-									<%= Post.where(:user_id => @current_user.id()).each do |p|
-										p.title 
-										p.created_at
-									end%>
+									<% Post.where(:user_id => @current_user.id()).each do |p| %>
+									<div> Title:- <%= p.title %> </div>
+									<div> Time Created:- <%=p.created_at %></div>
+									<%end%>
 							</div>
 					  		<div class="twelve columns">
 					  			<%= link_to "New Post", new_post_url, :class=>"button"%>
