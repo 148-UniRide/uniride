@@ -30,24 +30,69 @@
 				</div>
 			</div>
 			<div class="row">
-				<div id="show-info"></div>
+				<div id="show-info">
+					<div class="row">
+					  		<div>
+					  			First Name:-  
+					  			<%= @current_user.firstName()%>
+					  		</div>
+					  		<div>
+					  			Last Name:-  
+					  			<%= @current_user.lastName()%>
+					  		</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div id="post-info">
+					<div class="row">
+					  		These are your posts:-
+					  		<div class ="row">
+									<% Post.where(:user_id => @current_user.id()).each do |p| %>
+									<div> -----------------------------</div>
+									<div> Title:- <%= p.title %> </div>
+									<div> Time Created:- <%=p.created_at %></div>
+									<div> -----------------------------</div>
+ 									<%end%>
+							</div>
+					  		<div class="twelve columns">
+					  			<%= link_to "New Post", new_post_url, :class=>"button"%>
+					  		</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div id="trips-info">
+					
+				</div>
 			</div>
 
 			<script type="text/javascript">
 				$("#profile").click(function() {
 					$("#posts").removeClass("selected");
 					$("#trips").removeClass("selected");
+					$("#post-info").hide();
+					$("#trips-info").hide();
+					$("#show-info").show();
 					$(this).addClass("selected");
 				});
 				$("#posts").click(function() {
 					$("#profile").removeClass("selected");
 					$("#trips").removeClass("selected");
+					$("#trips-info").hide();
+					$("#show-info").hide();
+					$("#post-info").show();
 					$(this).addClass("selected");
 				});
 
 				$("#trips").click(function() {
 					$("#posts").removeClass("selected");
 					$("#profile").removeClass("selected");
+					$("#post-info").hide();
+					$("#show-info").hide();
+					$("#trips-info").show();
 					$(this).addClass("selected");
 				});
 			</script>
