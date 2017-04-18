@@ -13,7 +13,7 @@
   
   <div class="field">
     <%= f.label :title %>
-    <%= f.text_field :title %>
+    <%= f.text_field :title, :required=>true %>
   </div>
 
   <div class="field">
@@ -23,14 +23,16 @@
 
   <div class="field">
     <%= f.label :date %>
-    <%= f.date_select :date %>
+    <%= f.date_select :date, :required=>true %>
   </div>
 
   <%= f.fields_for :addresses do |address| %>
-    <h4>Source</h4>
-    <%= render 'address_fields', f: address %>
+    <% if address.index==0 %>
+      <h4>Source</h4>
+    <%else%>
     <h4>Destination</h4>
-    <%= render 'address_fields', f: address %>
+    <%end%>
+    <%= render 'address_fields', f: address, init_field: true %>
   <% end %>
   <h5>Detours</h5>
   <div class='links'>

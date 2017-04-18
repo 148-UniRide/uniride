@@ -22,29 +22,27 @@
 
 <p>
   <strong>Address:</strong>
-  <% @addresses.each do |address| %>
-  	<p>
-  	  <strong>Street:</strong>
-	  <%= address.street %>
-	</p>
+  <% @addresses.each_with_index do |address, index| %>
 
-	<p>
-	  <strong>City:</strong>
-	  <%= address.city %>
-	</p>
+  	<% if index==0 %>
+      <h4>Source</h4>
+    <%else%>
+    	<h4>Destination</h4>
+    <%end%>
 
-	<p>
-	  <strong>State:</strong>
-	  <%= address.state %>
+	<p><%= address.full_address %>	
+	<br/>Latitude: <%= address.latitude %>
+	<br/>Longitude: <%= address.longitude %>
 	</p>
-
-	<p>
-	  <strong>Zip:</strong>
-	  <%= address.zip %>
-	</p>
-
   <%end%>
 </p>
+
+<iframe
+  width="600"
+  height="450"
+  frameborder="0" style="border:0"
+  src="<%=@iframe_src%>" allowfullscreen>
+</iframe>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>

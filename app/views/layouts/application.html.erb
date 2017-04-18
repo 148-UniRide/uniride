@@ -13,6 +13,7 @@
   </head>
 
   <body>
+  <%if user_signed_in? %>
   <div class="container-nav">
       <div class="row">
         <div class="four columns">
@@ -35,6 +36,9 @@
         </div>
       </div>
   </div>
+
+  <div class="create-margin"></div>
+  <%end%>
   <% unless user_signed_in?%> 
   	<div class="alert-notice"><p class="notice"><%= notice %></p></div>
   <% end %>

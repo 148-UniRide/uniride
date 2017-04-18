@@ -1,6 +1,5 @@
 class AddressesController < ApplicationController
   before_action :set_address, only: [:show, :edit, :update, :destroy]
-
   # GET /addresses
   # GET /addresses.json
   def index
@@ -71,4 +70,6 @@ class AddressesController < ApplicationController
     def address_params
       params.require(:address).permit(:street, :city, :state, :zip)
     end
+
+  
 end

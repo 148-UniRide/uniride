@@ -11,12 +11,14 @@ class PostsController < ApplicationController
   # GET /posts/1.json
   def show
     @addresses = @post.addresses
+    @iframe_src = @post.set_iframe_src
   end
 
   # GET /posts/new
   def new
     @added=false
     @post = Post.new
+    @post.addresses.new
     @post.addresses.new
   end
 
@@ -76,4 +78,5 @@ class PostsController < ApplicationController
       params.require(:post).permit(:title, :description, :date, 
         addresses_attributes: [:id, :street, :city, :state, :zip, :_destroy])
     end
+
 end
