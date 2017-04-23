@@ -3,7 +3,7 @@
   	<div class="row">
 		<div class="twelve columns">
 			<div class="photo">
-				<%= image_tag(current_user.avatar.url, :height=>"220px")%>	
+				<%= image_tag(@user.avatar.url, :height=>"220px")%>	
 			</div>
 		</div>
 	</div>
@@ -11,7 +11,7 @@
 	<div class="row">
 		<div class="twelve columns">	
 			<div class="name">
-				<%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%>
+				<%= first_letter_uppercase @user.firstName%> <%= first_letter_uppercase @user.lastName%>
 			</div>
 		</div>
 	</div>
@@ -34,11 +34,11 @@
 					<div class="row">
 					  		<div>
 					  			First Name:-  
-					  			<%= @current_user.firstName()%>
+					  			<%= @user.firstName()%>
 					  		</div>
 					  		<div>
 					  			Last Name:-  
-					  			<%= @current_user.lastName()%>
+					  			<%= @user.lastName()%>
 					  		</div>
 					</div>
 				</div>
@@ -47,12 +47,14 @@
 			<div class="row">
 				<div id="post-info">
 					<div class="row">
-					  		These are <%=first_letter_uppercase current_user.firstName%> <%=first_letter_uppercase current_user.lastName%>'s posts:-
+					  		These are <%=first_letter_uppercase @user.firstName%> <%=first_letter_uppercase @user.lastName%>'s posts:-
 					  		<div class ="row">
-									<%= Post.where(:user_id => @current_user.id()).each do |p|
-										p.title 
-										p.created_at
-									end%>
+									<%Post.where(:user_id => @user.id()).each do |p| %>
+									<div> ------------------</div>
+									Title:- <%=	p.title %> </br>							
+									Time:- <%=	p.created_at %> </br>
+									<div> ------------------</div>
+									<% end %>
 							</div>
 					</div>
 				</div>
@@ -60,7 +62,7 @@
 
 			<div class="row">
 				<div id="trips-info">
-					These are <%=first_letter_uppercase current_user.firstName%> <%=first_letter_uppercase current_user.lastName%>'s trips:-
+					These are <%=first_letter_uppercase @user.firstName%> <%=first_letter_uppercase @user.lastName%>'s trips:-
 				</div>
 			</div>
 

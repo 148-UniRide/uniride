@@ -9,7 +9,6 @@ class Address < ApplicationRecord
 	def lat_changed?
 	    if (self.address_changed)
 	        if !(self.latitude_changed?)
-	            self.errors.add(self.full_address, "is not valid")
 	            return false
 	        end
 	    end

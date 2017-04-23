@@ -4,7 +4,14 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    #visitor_latitude = request.location.latitude
+    #visitor_longitude = request.location.longitude
+    @visitor_latitude = 37.35138
+    @visitor_longitude = -121.850291
+    @posts = Array.new
+    @source_near_me = Array.new()
+    get_this_post
+    #Post.where(:id => Addresses.full_address.near(visitor_latitude, visitor_longitude).post_id)
   end
 
   # GET /posts/1
@@ -12,6 +19,23 @@ class PostsController < ApplicationController
   def show
     @addresses = @post.addresses
     @iframe_src = @post.set_iframe_src
+  end
+
+  #
+  def get_this_post
+   #temp = Address.near([@visitor_latitude, @visitor_longitude], 20)
+   #temp = Post.all() 
+   t = Post.all()
+   limit = 8
+
+   t.each do |temp1|
+        dist = temp1.addresses.first().distance_to([@visitor_latitude, @visitor_longitude])
+       
+        if dist <= limit
+          @posts.push(temp1)
+        end
+   end
+
   end
 
   # GET /posts/new

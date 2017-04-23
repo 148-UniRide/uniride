@@ -50,6 +50,11 @@ class AddressesController < ApplicationController
     end
   end
 
+  #posts that are closser to the longtitude and latitude given
+  def posts_close_to_me (lat, long)
+    a_addresses = Addresses.where 
+  end
+
   # DELETE /addresses/1
   # DELETE /addresses/1.json
   def destroy
