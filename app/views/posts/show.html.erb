@@ -1,48 +1,48 @@
 <p id="notice"><%= notice %></p>
+ 
+<div class="container" >
+  <h2><%= @post.title %></h2>
+  <p>Posted by <%= @post.user.firstName %> <%= @post.user.lastName %> <%= time_ago_in_words(@post.created_at) %> ago</p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @post.title %>
-</p>
+  <p><%= @post.description %></p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @post.description %>
-</p>
+  <p>
+    <strong>Address:</strong>
+    <% @addresses.each_with_index do |address, index| %>
 
-<p>
-  <strong>Date:</strong>
-  <%= @post.date %>
-</p>
+    	<% if index==0 %>
+        <h4>Source</h4>
+      <%else%>
+      	<h4>Destination</h4>
+      <%end%>
 
-<p>
-  <strong>User:</strong>
-  <%= @post.user.firstName %>
-</p>
-
-<p>
-  <strong>Address:</strong>
-  <% @addresses.each_with_index do |address, index| %>
-
-  	<% if index==0 %>
-      <h4>Source</h4>
-    <%else%>
-    	<h4>Destination</h4>
+  	<p><%= address.full_address %>	
+  	<br/>Latitude: <%= address.latitude %>
+  	<br/>Longitude: <%= address.longitude %>
+  	</p>
     <%end%>
+  </p>
 
-	<p><%= address.full_address %>	
-	<br/>Latitude: <%= address.latitude %>
-	<br/>Longitude: <%= address.longitude %>
-	</p>
-  <%end%>
-</p>
+  <iframe
+    width="600"
+    height="450"
+    frameborder="0" style="border:0"
+    src="<%=@iframe_src%>" allowfullscreen>
+  </iframe>
 
-<iframe
-  width="600"
-  height="450"
-  frameborder="0" style="border:0"
-  src="<%=@iframe_src%>" allowfullscreen>
-</iframe>
 
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
+  <h3>Comments: </h3>
+  <%= render @post.comments %>
+
+  <h3>Reply to Post: </h3>
+  <%= render 'comments/form' %>
+
+
+  <% if user_signed_in? %>
+    <% if @post.user_id == current_user.id %>
+      <%= link_to 'Edit', edit_post_path(@post) %> |
+      <%= link_to 'Back', posts_path %>
+    <% end %>
+  <% end %>
+
+</div>
