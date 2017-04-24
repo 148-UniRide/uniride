@@ -35,7 +35,7 @@
 	<% if current_user %>	
 	<div class="row">
 		<div class="twelve columns">			
-  		<%= link_to "Sign Out", destroy_user_session_path, :method=> :delete, :class=>"button"%>
+  		<%= link_to "Sign Out", destroy_user_post_session_path, :method=> :delete, :class=>"button"%>
 		</div>
   	</div>
 	<%end%>

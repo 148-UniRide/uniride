@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :posts
+  resources :posts do
+  	resources :comments
+  end 
   resources :addresses
 	match '#' => 'users#profile', :as => :user_root, via: [:get]
   	
