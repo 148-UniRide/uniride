@@ -53,6 +53,7 @@
 									<div> ------------------</div>
 									Title:- <%=	p.title %> </br>							
 									Time:- <%=	p.created_at %> </br>
+									<div> <%= link_to "View Post", post_path(p) %> </div>
 									<div> ------------------</div>
 									<% end %>
 							</div>

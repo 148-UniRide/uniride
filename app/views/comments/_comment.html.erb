@@ -1,0 +1,12 @@
+<p><%= comment.content %> </p>
+<p>Posted by <%= comment.user.firstName %> <%= comment.user.lastName %> <%= time_ago_in_words(comment.created_at) %> ago</p>
+
+
+<% if user_signed_in? %>
+	<% if comment.user_id == current_user.id %>
+		<%= link_to "Edit", edit_post_comment_path(comment.post, comment) %>
+		<%= link_to "Delete", post_comment_path(comment.post, comment), method: :delete, data: { confirm: "Are you sure?" } %>
+	<% end %>
+<% end %>
+
+
