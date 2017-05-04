@@ -3,16 +3,17 @@
   	<div class="row">
 		<div class="twelve columns">
 			<div class="photo">
-				<%= image_tag(current_user.avatar.url, :height=>"220px")%>	
+				
 			</div>
 		</div>
 	</div>
+
 	<div class="row">
 		<div class="twelve columns">	
 			<div class="name">
 				<%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%>
 			</div>
-				<%= link_to "Edit", edit_user_registration_path, :class=>"button" %>
+				<%= link_to "Edit", edit_user_registration_path, :class=>"button special" %>
 		</div>
 	</div>
 
