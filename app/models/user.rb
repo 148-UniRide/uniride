@@ -6,4 +6,20 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  def fullname
+		[firstName, lastName].join(' ').strip
+  end
+
+  acts_as_messageable
+
+  def mailboxer_name
+  	self.fullname
+  end
+
+  def mailboxer_email(object)
+  	self.email
+  end
+
+
 end

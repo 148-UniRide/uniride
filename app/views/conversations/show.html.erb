@@ -1,0 +1,36 @@
+<div class="container">
+<div class="row">
+	<div class="spacer"></div>
+	<div class="six columns">
+		<button><%= link_to "Compose", new_conversation_path %></button>
+		<div class="six columns.u-pull-right">
+			<% if conversation.is_trashed?(current_user) %>
+				<button><% link_to "Untrash", untrash_conversation_path(conversation), method: :post %></button>
+			<% else %>
+				<button><%= link_to "Move to trash", trash_conversation_path(conversation), method: :post,
+						data: { confirm: "Are you sure?" } %> </button>
+			<% end %>
+
+		</div>
+	</div>
+
+	<div class="four columns">
+		<%= render 'mailbox/folders' %>
+	</div>
+
+	<div class="eight columns" >
+		<%= render partial: "messages" %>
+		<!-- Reply Form -->
+		<%= form_for :message, url: reply_conversation_path(conversation) do |f| %>
+			<div class="field">
+				<%= f.text_area :body, placeholder: "Reply Message", rows: 4 %>
+			</div>
+
+			<div class="actions">
+    			<%= f.submit %>
+  			</div>
+		<% end %>	
+	</div>
+
+</div>
+</div>
