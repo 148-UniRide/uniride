@@ -1,6 +1,11 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
+  def search
+    #@date_test = params.to_unsafe_h.slice(:date)
+    @search_results = Post.search(params[:street1], params[:city1], params[:zip1], params[:street2], params[:city2], params[:zip2])
+  end
+
   # GET /posts
   # GET /posts.json
   def index
@@ -8,7 +13,8 @@ class PostsController < ApplicationController
     #visitor_longitude = request.location.longitude
     @visitor_latitude = 37.35138
     @visitor_longitude = -121.850291
-    @posts = Array.new
+    #@posts = Array.new
+    @posts = Post.all
     @source_near_me = Array.new()
     get_this_post
     #Post.where(:id => Addresses.full_address.near(visitor_latitude, visitor_longitude).post_id)
@@ -32,7 +38,7 @@ class PostsController < ApplicationController
         dist = temp1.addresses.first().distance_to([@visitor_latitude, @visitor_longitude])
        
         if dist <= limit
-          @posts.push(temp1)
+          #@posts.push(temp1)
         end
    end
 

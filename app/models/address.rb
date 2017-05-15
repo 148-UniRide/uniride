@@ -29,7 +29,7 @@ class Address < ApplicationRecord
 
 	    self.street = self.each_first_letter_uppercase(street_array).join(" ")
 	    self.city = self.each_first_letter_uppercase(city_array).join(" ")
-	    self.state.strip
+	    self.state.strip.downcase
 	    self.zip.strip
   	end
 

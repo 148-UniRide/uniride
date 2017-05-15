@@ -12,8 +12,10 @@
 
     	<% if index==0 %>
         <h4>Source</h4>
-      <%else%>
+      <%elsif index==1%>
       	<h4>Destination</h4>
+      <%else%>
+        <h4>Detour <%= index-1 %></h4>
       <%end%>
 
   	<p><%= address.full_address %>	
@@ -29,7 +31,6 @@
     frameborder="0" style="border:0"
     src="<%=@iframe_src%>" allowfullscreen>
   </iframe>
-
 
   <h3>Comments: </h3>
   <%= render @post.comments %>
