@@ -3,7 +3,8 @@ class PostsController < ApplicationController
 
   def search
     #@date_test = params.to_unsafe_h.slice(:date)
-    @search_results = Post.search(params[:street1], params[:city1], params[:zip1], params[:street2], params[:city2], params[:zip2])
+    @search_results = Post.search(params[:street1], params[:city1], params[:zip1], 
+      params[:street2], params[:city2], params[:zip2])
   end
 
   # GET /posts

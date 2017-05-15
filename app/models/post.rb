@@ -55,14 +55,58 @@ class Post < ApplicationRecord
   end
 
   def self.search(street1, city1, zip1, street2, city2, zip2)
-    results = Array.new
+    street1.to_s.rstrip
+    city1.to_s.rstrip
+    zip1.to_s.rstrip
+    street2.to_s.rstrip
+    city2.to_s.rstrip
+    zip2.to_s.rstrip
+    results ||= Array.new
     Post.all.each do |post|
-      results.push(post) if (check_address(post.addresses.first, street1, city1, zip1) || check_address(post.addresses.second, street2, city2, zip2))
+      results.push(post) if search_through_addresses(post, street1, city1, zip1, street2, city2, zip2)
     end
     results
   end
 
   private
+
+  def self.search_through_addresses(post, street1, city1, zip1, street2, city2, zip2)
+    source_matched = false
+    source_matched_index = -1
+    destination_matched = false
+    destination_matched_index = -1
+
+    post.addresses.each_with_index do |address, index|
+      next if index==1
+      if check_address(address, street1, city1, zip1)
+        source_matched = true
+        source_matched_index = index
+        break
+      end
+    end
+
+    if source_matched
+      source_matched_index==0 ? addresses_destination=post.addresses[2..post.addresses.count-1] : 
+      addresses_destination=post.addresses[source_matched_index..post.addresses.count-1]
+
+      addresses_destination.each_with_index do |address, index|
+        if check_address(address, street2, city2, zip2)
+          destination_matched = true
+          destination_matched_index = index
+          break
+        end
+        if index == addresses_destination.count-1
+          if check_address(post.addresses.second, street2, city2, zip2)
+            destination_matched = true
+            destination_matched_index = 1
+            break
+          end
+        end
+      end
+    end
+
+    source_matched && destination_matched ? true : false
+  end
 
   def self.check_address(address, street, city, zip)
     check_street(address, street) || 
