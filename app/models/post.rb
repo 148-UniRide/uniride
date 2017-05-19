@@ -38,7 +38,7 @@ class Post < ApplicationRecord
 
     end
 
-    if self.addresses.count>1
+    if !detours.nil?
       detours.each_with_index do |detour, index|
         unless index+1==detours.count
           detour_group = detour_group + detour + "|"
@@ -46,12 +46,12 @@ class Post < ApplicationRecord
           detour_group = detour_group + detour
         end
       end
+    detour_tag = detour_tag + detour_group
     end
 
-    detour_tag = detour_tag + detour_group
     origin_tag = origin_tag + origin_coord
     destination_tag = destination_tag + destination_coord
-    main_string = main_string + origin_tag + destination_tag + detour_tag
+    detour_tag.nil? ? main_string = main_string + origin_tag + destination_tag : main_string = main_string + origin_tag + destination_tag + detour_tag
   end
 
   def self.search(street1, city1, zip1, street2, city2, zip2)
