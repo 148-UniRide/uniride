@@ -2,6 +2,7 @@ class Post < ApplicationRecord
 	belongs_to :user
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
+  before_save :get_midpoints
 
 	accepts_nested_attributes_for :addresses, 
 	:allow_destroy => true, :reject_if => :all_blank
@@ -127,4 +128,42 @@ class Post < ApplicationRecord
     zip.nil? || zip.empty? ? false : address.zip==zip
   end
 
+  #code for finding midpoints
+  #currently only checks for midpoints between source and destination
+  def self.get_midpoints
+    source = self.addresses.first
+    destination = self.addresses.second
+
+    limit = 5
+
+    dist = source.distance_to(destination)
+       
+    if dist >= limit
+      recur_mid(source.longitude, source.latitude, destination.longitude, destination.latitude)
+    end
+  end
+
+  #This method will be called as long as there aren't 
+  #enough midpoints
+  def self.recur_mid(left_long, left_lat, right_long, right_lat)
+    
+  end
+
+  def cal_midpoint(lat1, lon1, lat2, lon2)
+    t1 = lon2 - lon1
+    dLon = t1 * Math::PI / 180
+
+    #convert to radians
+    lat1 = lat1 * Math::PI / 180
+    lat2 = lat2 * Math::PI / 180
+    lon1 = lon1 * Math::PI / 180
+
+    bx = Math.cos(lat2) * Math.cos(dLon)
+    by = Math.cos(lat2) * Math.sin(dLon)
+    lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + bx) * (Math.cos(lat1) + bx) + by * by))
+    lon3 = lon1 + Math.atan2(by, Math.cos(lat1) + bx)
+
+    #math.atan(x) = returns arc tangent of x
+    #math.atan2(x, y) = Returns atan(y/x ) in radians. 
+  end
 end
