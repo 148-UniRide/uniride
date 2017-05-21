@@ -9,14 +9,14 @@ class MidpointsController < ApplicationController
 	def new
 	end
 
-	def create (log, lat, left, right, p_id)
-		midpoint = Midpoint.new
-		midpoint.longitude = log
-		midpoint.latitude = lat
-		midpoint.left = left
-		midpoint.right = right
-		midpoint.post_id = p_id
-
+	def create_this
+		midpoint = Midpoint.new(midpoints_params)
+		
 		midpoint.save
 	end
+
+	private 
+		def midpoints_params
+      		params.require(:midpoint).permit(:latitude, :longitude, :left, :right, :dist_from_current_source, :post_id)
+    	end
 end

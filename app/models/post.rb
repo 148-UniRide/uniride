@@ -3,7 +3,7 @@ class Post < ApplicationRecord
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
   before_save :get_midpoints
-
+  has_many :midpoints
 	accepts_nested_attributes_for :addresses, 
 	:allow_destroy => true, :reject_if => :all_blank
 
@@ -143,22 +143,27 @@ class Post < ApplicationRecord
     source = self.addresses.first
     destination = self.addresses.second
 
-    limit = 5
+    @limit = 5
 
     dist = source.distance_to(destination)
        
     if dist >= limit
-      recur_mid(source.longitude, source.latitude, destination.longitude, destination.latitude)
+      cal_midpoint(source.latitude, source.longitude, destination.latitude, destination.longitude, left_add, right_add, 0, 1)
     end
   end
 
-  #This method will be called as long as there aren't 
-  #enough midpoints
-  def self.recur_mid(left_long, left_lat, right_long, right_lat)
-    
-  end
+  
+  #This method calculates and stores the midpoints in the table
+  def self.cal_midpoint(lat1, lon1, lat2, lon2, source_id, des_id)
+    temp = Address.new #this is just so the distance_to(lat, long) method can be used
+    temp.latitude = lat1
+    temp.longitude = lon1
 
-  def cal_midpoint(lat1, lon1, lat2, lon2)
+    temp2 = Address.new
+    temp2.latitude = lat2
+    temp2.longitude = lon2
+   
+    #Calculation for the midpoint *start*
     t1 = lon2 - lon1
     dLon = t1 * Math::PI / 180
 
@@ -174,5 +179,29 @@ class Post < ApplicationRecord
 
     #math.atan(x) = returns arc tangent of x
     #math.atan2(x, y) = Returns atan(y/x ) in radians. 
+    #Calculation for the midpoint *end*
+
+    #first save the current midpoint
+    mid_temp = Midpoint.new
+    mid_temp.latitude = lat3
+    mid_temp.longitude = lon3
+    mid_temp.left = source_id
+    mid_temp.right = des_id
+    mid_temp.dest_from_current_source = self.addresses[source_id].distance_to([lat3, lon3])
+    mid_temp.post_id = self.id
+    mid_temp.save
+    
+    #From mid to left
+    dist_l = temp.distance_to([lat3, lon3])
+    #from mid to right
+    dist_r = temp2.distance_to([lat3, lon3])
+    #First check left side
+    if(dist_l >= @limit)
+      cal_midpoint(lat1, lon1, lat3, lon3, source_id, des_id)
+    end  
+    #Then check the right side
+    if(dest_r >= @limit)
+      cal_midpoint(lat3, lon3, lat2, lon2, source_id, des_id)
+    end
   end
 end
