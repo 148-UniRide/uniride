@@ -1,22 +1,22 @@
-<div class="profile-wrapper">
+<section id="" class="wrapper style2 special">
+				<div class="inner narrow">
+					<header>
+						<h2><%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%></h2>
+					</header>
+					<form class="grid-form" method="post" action="#">
+						<ul class="actions">
+							<li>
+							<%= link_to "New Post", new_post_url, :class=>"button special"%>
+							</li>
+							<li>
+							<%= link_to "Edit", edit_user_registration_path, :class=>"button special" %>
+							</li>
+						</ul>
+					</form>
+				</div>
+			</section>
+
 <div class="container">	
-  	<div class="row">
-		<div class="twelve columns">
-			<div class="photo">
-				<%= image_tag(current_user.avatar.url, :height=>"220px")%>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="twelve columns">	
-			<div class="name">
-				<%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%>
-			</div>
-				<%= link_to "Edit", edit_user_registration_path, :class=>"button special" %>
-		</div>
-	</div>
-
 	<div class="row">	
 		<div class="container" id="user-info">	
 			<div class="row">
@@ -34,11 +34,12 @@
 				<div id="show-info">
 					<div class="row">
 					  		<div>
-					  			First Name:-  
+					  			First Name:  
 					  			<%= @current_user.firstName%>
-					  		</div>
+
+					  		</div><br>
 					  		<div>
-					  			Last Name:-  
+					  			Last Name:  
 					  			<%= @current_user.lastName()%>
 					  		</div>
 					</div>
@@ -46,21 +47,16 @@
 			</div>
 
 			<div class="row">
-				<div id="post-info">
+				<div id="show-info">
 					<div class="row">
-					  		These are your posts:-
+					  		These are your posts:
 					  		<div class ="row">
 									<% Post.where(:user_id => @current_user.id()).each do |p| %>
-									<div> -----------------------------</div>
-									<div> Title:- <%= p.title %> </div>
-									<div> Time Created:- <%=p.created_at %></div>
-									<div> <%= link_to 'View Post', post_path(p) %> </div>
-									<div> -----------------------------</div>
+									<div> Title: <%= p.title %> </div><br>
+									<div> Time Created: <%=p.created_at %></div>
+									<div><%= link_to 'View Post', post_path(p) %> </div>
  									<%end%>
 							</div>
-					  		<div class="twelve columns">
-					  			<%= link_to "New Post", new_post_url, :class=>"button"%>
-					  		</div>
 					</div>
 				</div>
 			</div>
