@@ -1,7 +1,13 @@
-<h3><%= conversation.originator.fullname %> <br>
-	<small><b>Subject:</b><%= conversation.subject %></small>
-	<small><b>Date: </b><%= conversation.messages.last.created_at.strftime("%A, %b, %d, %Y at %I:%M%p") %></small>
-</h3>
+<div class="container row">
 
-<%= truncate conversation.messages.last.body, length: 145 %>
-<%= link_to "View", conversation_path(conversation) %>
+	<strong><%= conversation.originator.fullname %></strong> <br>
+	<small><b>Subject:</b><%= conversation.subject %></small><br>
+	<small><b>Date: </b><%= conversation.messages.last.created_at.strftime("%A, %b, %d, %Y at %I:%M%p") %></small>
+	<br>
+	<div class="field">
+	<%= truncate conversation.messages.last.body, length: 145 %>
+	</div>
+	<br>
+	<%= link_to "View More", conversation_path(conversation) %>
+</div>
+<br>
