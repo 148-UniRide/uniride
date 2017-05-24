@@ -2,7 +2,7 @@ class Post < ApplicationRecord
 	belongs_to :user
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
-  before_save :get_midpoints
+  after_save :get_midpoints
   has_many :midpoints
 	accepts_nested_attributes_for :addresses, 
 	:allow_destroy => true, :reject_if => :all_blank
@@ -139,43 +139,40 @@ class Post < ApplicationRecord
 
   #code for finding midpoints
   #currently only checks for midpoints between source and destination
-  def self.get_midpoints
-    source = self.addresses.first
-    destination = self.addresses.second
+  private def get_midpoints     
+    lat1 = self.addresses[0].latitude
+    lon1 = self.addresses[0].longitude
+
+    lat2 = self.addresses[1].latitude    
+    lon2 = self.addresses[1].longitude
 
     @limit = 5
-
-    dist = source.distance_to(destination)
-       
-    if dist >= limit
-      cal_midpoint(source.latitude, source.longitude, destination.latitude, destination.longitude, left_add, right_add, 0, 1)
+  
+    dist = Geocoder::Calculations.distance_between([lat1, lon1], [lat2, lon2])
+   
+    if dist >= @limit
+      cal_midpoint(lat1, lon1, lat2, lon2, 0, 1, lat1, lon1)
     end
   end
 
   
   #This method calculates and stores the midpoints in the table
-  def self.cal_midpoint(lat1, lon1, lat2, lon2, source_id, des_id)
-    temp = Address.new #this is just so the distance_to(lat, long) method can be used
-    temp.latitude = lat1
-    temp.longitude = lon1
-
-    temp2 = Address.new
-    temp2.latitude = lat2
-    temp2.longitude = lon2
-   
-    #Calculation for the midpoint *start*
+  def cal_midpoint(lat1, lon1, lat2, lon2, source_id, des_id, s_lat1, s_lon1)
     t1 = lon2 - lon1
     dLon = t1 * Math::PI / 180
 
     #convert to radians
-    lat1 = lat1 * Math::PI / 180
-    lat2 = lat2 * Math::PI / 180
-    lon1 = lon1 * Math::PI / 180
+    l1 = lat1 * Math::PI / 180
+    l2 = lat2 * Math::PI / 180
+    lo1 = lon1 * Math::PI / 180
 
-    bx = Math.cos(lat2) * Math.cos(dLon)
-    by = Math.cos(lat2) * Math.sin(dLon)
-    lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + bx) * (Math.cos(lat1) + bx) + by * by))
-    lon3 = lon1 + Math.atan2(by, Math.cos(lat1) + bx)
+    bx = Math.cos(l2) * Math.cos(dLon)
+    by = Math.cos(l2) * Math.sin(dLon)
+    lat3 = Math.atan2(Math.sin(l1) + Math.sin(l2), Math.sqrt((Math.cos(l1) + bx) * (Math.cos(l1) + bx) + by * by))
+    lon3 = lo1 + Math.atan2(by, Math.cos(l1) + bx)
+
+    lat3 = lat3 * 180 / Math::PI
+    lon3 = lon3 * 180 / Math::PI
 
     #math.atan(x) = returns arc tangent of x
     #math.atan2(x, y) = Returns atan(y/x ) in radians. 
@@ -187,21 +184,22 @@ class Post < ApplicationRecord
     mid_temp.longitude = lon3
     mid_temp.left = source_id
     mid_temp.right = des_id
-    mid_temp.dest_from_current_source = self.addresses[source_id].distance_to([lat3, lon3])
+    mid_temp.dist_from_current_source = Geocoder::Calculations.distance_between([s_lat1, s_lon1], [lat3, lon3])
     mid_temp.post_id = self.id
     mid_temp.save
     
     #From mid to left
-    dist_l = temp.distance_to([lat3, lon3])
+    dist = Geocoder::Calculations.distance_between([lat1, lon1], [lat3, lon3])
     #from mid to right
-    dist_r = temp2.distance_to([lat3, lon3])
+    dist_r = Geocoder::Calculations.distance_between([lat3, lon3], [lat2, lon2])
     #First check left side
-    if(dist_l >= @limit)
-      cal_midpoint(lat1, lon1, lat3, lon3, source_id, des_id)
-    end  
-    #Then check the right side
-    if(dest_r >= @limit)
-      cal_midpoint(lat3, lon3, lat2, lon2, source_id, des_id)
+    if(dist >= @limit)
+      #print "Distance between lat1: #{lat1}, lon1: #{lon1} and lat3: #{lat3} and lon3: #{lon3}: "
+      #print dist
+      cal_midpoint(lat1, lon1, lat3, lon3, source_id, des_id, s_lat1, s_lon1)
+    end
+    if(dist_r >= @limit)
+      cal_midpoint(lat3, lon3, lat2, lon2, source_id, des_id, s_lat1, s_lon1)
     end
   end
 end
