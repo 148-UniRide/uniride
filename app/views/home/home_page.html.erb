@@ -18,7 +18,7 @@
 
 				<% if current_user %>
 				<h2><span style="font-weight:bold"><%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%></span><br> Where do you want to go today?</p>
-				<p><%= link_to "Post a Trip", new_post_url, :class=>"button special"%> <%= link_to "Look for a ride", new_post_url, :class=>"button special"%></p>
+				<p><%= link_to "Post a Trip", new_post_url, :class=>"button special"%> <%= link_to "Look for a ride", search_path, :class=>"button special"%></p>
 				<%end%>
 
 				<%unless user_signed_in? %>

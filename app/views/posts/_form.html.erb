@@ -1,3 +1,4 @@
+<div class="container">
 <%= form_for(post) do |f| %>
   <% if post.errors.any? %>
     <div id="error_explanation">
@@ -30,10 +31,12 @@
     <% if address.index==0 %>
       <h4>Source</h4>
     <%else%>
+
     <h4>Destination</h4>
     <%end%>
     <%= render 'address_fields', f: address, init_field: true %>
-  <% end %>
+    <% end %>
+
   <h5>Detours</h5>
   <div class='links'>
     <%= link_to_add_association 'add detour', f, :addresses%>
@@ -41,4 +44,5 @@
   <div class="actions">
     <%= f.submit %>
   </div>
-<% end %>
+  <% end %>
+</div>
