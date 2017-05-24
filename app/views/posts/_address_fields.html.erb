@@ -20,7 +20,9 @@
         <%= f.text_field :zip, :value=>"", :class=>"u-full-width" %>
       </div>
   </div>
-  <%unless local_assigns[:init_field]%>
-    <%= link_to_remove_association('remove this', f) %>
+  <%if !local_assigns[:init_field]%>
+    <h6><span style="font-size: 18px"><%= link_to_remove_association('( Remove )', f) %></span></h6>
+  <%elsif local_assigns[:editing] && local_assigns[:i]>1 %>
+    <h6><span style="font-size: 18px"><%= link_to_remove_association('( Remove )', f) %></span></h6>
   <%end%>
 </div>

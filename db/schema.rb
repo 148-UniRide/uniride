@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504212612) do
+ActiveRecord::Schema.define(version: 20170524081742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,11 +20,12 @@ ActiveRecord::Schema.define(version: 20170504212612) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "post_id"
     t.float    "latitude"
     t.float    "longitude"
+    t.boolean  "has_point",  default: false, null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -35,6 +36,17 @@ ActiveRecord::Schema.define(version: 20170504212612) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_comments_on_post_id", using: :btree
     t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
+  end
+
+  create_table "custom_points", force: :cascade do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "distance_left"
+    t.integer  "distance_source"
+    t.integer  "post_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["post_id"], name: "index_custom_points_on_post_id", using: :btree
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
@@ -94,14 +106,13 @@ ActiveRecord::Schema.define(version: 20170504212612) do
     t.string   "title"
     t.text     "description"
     t.date     "date"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "user_id"
+    t.integer  "addresses_count"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "firstName"
-    t.string   "lastName"
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -114,6 +125,8 @@ ActiveRecord::Schema.define(version: 20170504212612) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "firstName"
+    t.string   "lastName"
     t.string   "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
@@ -121,6 +134,7 @@ ActiveRecord::Schema.define(version: 20170504212612) do
 
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "custom_points", "posts"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

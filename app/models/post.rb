@@ -2,10 +2,53 @@ class Post < ApplicationRecord
 	belongs_to :user
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
+  has_many :custom_points
+  after_create :set_first_points
+  #after_save :set_points, if: :addresses_check?
+  
 
 	accepts_nested_attributes_for :addresses, 
 	:allow_destroy => true, :reject_if => :all_blank
+  $test="nil"
 
+  def addresses_check?
+    changed = false
+    self.addresses.each do |address|
+      changed = true if address.street_changed? || address.city_changed? || 
+      address.state_changed? || address.zip_changed? || self.addresses_count_changed?
+      break if changed
+    end
+    changed
+  end
+
+  def create_point(lat, lon, dis_left, dis_sor)
+    CustomPoint.create(latitude: lat, longitude: lon, distance_left: dis_left, distance_source: dis_sor, post_id: self.id)
+  end
+
+  private def set_first_points
+    self.addresses.each_with_index do |address, index|
+      address.has_point = true
+      lat = address.latitude
+      lon = address.longitude
+      distance_source = address.distance_to(self.addresses.first)
+      distance_left = address.distance_to(self.addresses[index-1]) unless index==0 || index == 1 || index == 2
+      distance_left = distance_source if index==2 || (index==1 && self.addresses.count==2)
+      distance_left = address.distance_to(self.addresses.last) if index==1 && self.addresses.count > 2
+      distance_left = 0 if index==0
+
+      create_point(lat, lon, distance_left, distance_source)
+    end
+  end
+
+  private def set_points
+    $test = "changed"
+    CustomPoint.where(:post_id=>self.id).destroy_all
+    set_first_points
+  end
+
+  def get_distance
+    $test
+  end
 
   def set_iframe_src
     main_string = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyD1zV2b2rTtvUYLSOL9CiNxTKiB2hMBeCI"
@@ -68,8 +111,6 @@ class Post < ApplicationRecord
     results
   end
 
-  private
-
   def self.search_through_addresses(post, street1, city1, zip1, street2, city2, zip2)
     source_matched = false
     source_matched_index = -1
@@ -126,5 +167,7 @@ class Post < ApplicationRecord
   def self.check_zip(address, zip)
     zip.nil? || zip.empty? ? false : address.zip==zip
   end
+
+  private_class_method :search_through_addresses, :check_address, :check_street ,:check_city, :check_zip
 
 end

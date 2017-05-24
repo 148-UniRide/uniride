@@ -24,6 +24,7 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
+    @get_distance = @post.get_distance
     @addresses = @post.addresses
     @iframe_src = @post.set_iframe_src
   end
@@ -62,6 +63,7 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     @post.user = current_user
+    @post.addresses_count = @post.addresses.count
 
     respond_to do |format|
       if @post.save
@@ -77,6 +79,7 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   # PATCH/PUT /posts/1.json
   def update
+    @post.update_attribute(:addresses_count, @post.addresses.count)
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
@@ -106,7 +109,7 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:title, :description, :date, 
+      params.require(:post).permit(:addresses_count, :title, :description, :date, 
         addresses_attributes: [:id, :street, :city, :state, :zip, :_destroy])
     end
 

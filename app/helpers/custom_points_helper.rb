@@ -1,0 +1,2 @@
+module CustomPointsHelper
+end

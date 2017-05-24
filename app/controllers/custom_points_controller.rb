@@ -1,0 +1,3 @@
+class CustomPointsController < ApplicationController
+
+end

@@ -1,3 +1,4 @@
+<%editing = false unless editing%>
 <%= form_for(post) do |f| %>
   <% if post.errors.any? %>
     <div id="error_explanation">
@@ -29,15 +30,18 @@
   <%= f.fields_for :addresses do |address| %>
     <% if address.index==0 %>
       <h4>Source</h4>
+    <%elsif address.index==1%>
+      <h4>Destination</h4>
     <%else%>
-    <h4>Destination</h4>
+      <h4>
+      Detour - <%= address.index-1 %>
+      </h4>
     <%end%>
-    <%= render 'address_fields', f: address, init_field: true %>
+    <%= render 'address_fields', f: address, init_field: true, editing: editing, i: address.index %>
   <% end %>
-  <h5>Detours</h5>
-  <div class='links'>
+  <h5 class='links'>
     <%= link_to_add_association 'add detour', f, :addresses%>
-  </div>
+  </h5>
   <div class="actions">
     <%= f.submit %>
   </div>
