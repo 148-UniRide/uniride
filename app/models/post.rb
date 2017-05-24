@@ -148,16 +148,46 @@ class Post < ApplicationRecord
 
     @limit = 5
   
-    dist = Geocoder::Calculations.distance_between([lat1, lon1], [lat2, lon2])
-   
-    if dist >= @limit
-      cal_midpoint(lat1, lon1, lat2, lon2, 0, 1, lat1, lon1)
+    @dis = Geocoder::Calculations.distance_between([lat1, lon1], [lat2, lon2])
+
+    latLon = Midpoint.new()
+    outArr = Array.new()
+    
+    #source
+    latLon.latitude = lat1
+    latLon.longitude = lon1
+    latLon.dist_from_current_source = 0.0
+
+    outArr.push(latLon)
+
+    #destination
+    latLon.latitude = lat2
+    latLon.longitude = lon2
+    latLon.dist_from_current_source = @dis
+
+    outArr.push(latLon)
+
+    outArr2 = outArr
+
+    i = 0 
+
+    if @dis >= @limit
+      while (@dis > 5)
+        while  (i < outArr.count - 1)
+          cal_midpoint(outArr[i].latitude, outArr[i].longitude, outArr[i+1].latitude, outArr[i+1].longitude,
+             0, 1, lat1, lon1, outArr2)
+          outArr2.sort_by {|obj| obj.dist_from_current_source}          
+          i += 1
+        end
+        outArr = outArr2  
+      end  
     end
+
   end
 
   
   #This method calculates and stores the midpoints in the table
-  def cal_midpoint(lat1, lon1, lat2, lon2, source_id, des_id, s_lat1, s_lon1)
+  def cal_midpoint(lat1, lon1, lat2, lon2, source_id, des_id, s_lat1, s_lon1, outArr)
     t1 = lon2 - lon1
     dLon = t1 * Math::PI / 180
 
@@ -189,17 +219,9 @@ class Post < ApplicationRecord
     mid_temp.save
     
     #From mid to left
-    dist = Geocoder::Calculations.distance_between([lat1, lon1], [lat3, lon3])
-    #from mid to right
-    dist_r = Geocoder::Calculations.distance_between([lat3, lon3], [lat2, lon2])
-    #First check left side
-    if(dist >= @limit)
-      #print "Distance between lat1: #{lat1}, lon1: #{lon1} and lat3: #{lat3} and lon3: #{lon3}: "
-      #print dist
-      cal_midpoint(lat1, lon1, lat3, lon3, source_id, des_id, s_lat1, s_lon1)
-    end
-    if(dist_r >= @limit)
-      cal_midpoint(lat3, lon3, lat2, lon2, source_id, des_id, s_lat1, s_lon1)
-    end
+    @dis = Geocoder::Calculations.distance_between([lat1, lon1], [lat3, lon3])
+    dist = Geocoder::Calculations.distance_between([s_lat1, s_lon1], [lat3, lon3])
+    outArr.push(mid_temp)
   end
+
 end
