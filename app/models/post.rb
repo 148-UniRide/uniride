@@ -3,8 +3,8 @@ class Post < ApplicationRecord
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
   has_many :custom_points
-  after_create :set_first_points
-  #after_save :set_points, if: :addresses_check?
+  #after_create :set_first_points
+  after_save :get_midpoints
   
 
 	accepts_nested_attributes_for :addresses, 
@@ -167,6 +167,143 @@ class Post < ApplicationRecord
   def self.check_zip(address, zip)
     zip.nil? || zip.empty? ? false : address.zip==zip
   end
+
+    #code for finding midpoints
+  #currently only checks for midpoints between source and destination
+  $outArr = Array.new()
+  $outArr2 = Array.new()
+  $t = true
+
+  private def get_midpoints
+    lat1 = self.addresses[0].latitude
+    lon1 = self.addresses[0].longitude
+
+    lat2 = self.addresses[1].latitude    
+    lon2 = self.addresses[1].longitude
+
+    @limit = 5
+  
+    @dis = self.addresses.first.distance_to(self.addresses.second)
+
+    latLon = CustomPoint.new()
+
+    t = 0
+    
+    #source
+    point1 = create_point(lat1, lon1, 0, 0)
+
+    $outArr.push(point1)
+
+    #destination
+    point2 = create_point(lat2, lon2, 0, @dis)
+
+    $outArr.push(point2)
+    $outArr2 = $outArr
+   
+    t1 = $outArr.count
+
+    if @dis >= @limit
+      while ($t)
+        i = 0 
+        while  (i < t1 - 1)
+          cal_midpoint($outArr[i].latitude, $outArr[i].longitude,
+             $outArr[i+1].latitude, $outArr[i+1].longitude,
+              self.addresses.first, i)
+          #$outArr.sort_by {|obj| obj.distance_source}          
+          i += 1
+        end
+        $outArr = $outArr2
+        t1 = $outArr.count
+      end  
+    end
+
+    i = $outArr.count - 1
+    dis = Geocoder::Calculations.distance_between([$outArr[i].latitude, $outArr[i].longitude], [$outArr[i - 1].latitude, $outArr[i - 1].longitude])
+    $outArr[i].distance_left = dis
+    
+    $outArr.each do |cp|
+      cp.save
+    end
+
+    $outArr.clear
+    $outArr2.clear
+    $t = true
+
+  end
+
+  
+  #This method calculates and stores the midpoints in the table
+  def cal_midpoint(lat1, lon1, lat2, lon2, sou, index)
+    midpoint = Geocoder::Calculations.geographic_center([[lat1, lon1], [lat2, lon2]])
+    lat3 = midpoint[0]
+    lon3 = midpoint[1]
+
+    #first save the current midpoint
+    mid_temp = CustomPoint.new
+    mid_temp.latitude = lat3
+    mid_temp.longitude = lon3
+    mid_temp.distance_source = sou.distance_to([lat3, lon3])
+    mid_temp.distance_left = Geocoder::Calculations.distance_between([lat3, lon3], [$outArr[index].latitude, $outArr[index].longitude])
+    mid_temp.post_id = self.id
+    $outArr2.push(mid_temp) 
+    $outArr2.sort_by! {|obj| obj.distance_source}
+    dis = Geocoder::Calculations.distance_between([$outArr2[0].latitude, $outArr2[0].longitude] , [$outArr2[1].latitude, $outArr2[1].longitude])
+      
+    #create_point(lat3, lon3, 0, distan)  
+    if dis <= 5
+      $t = false
+    end
+  end
+
+  def get_midpoints2
+
+    self.addresses.each_with_index do |address, index|
+      address.has_point = true
+      lat = address.latitude
+      lon = address.longitude
+      distance_source = address.distance_to(self.addresses.first)
+      distance_left = address.distance_to(self.addresses[index-1]) unless index==0 || index == 1 || index == 2
+      distance_left = distance_source if index==2 || (index==1 && self.addresses.count==2)
+      distance_left = address.distance_to(self.addresses.last) if index==1 && self.addresses.count > 2
+      distance_left = 0 if index==0
+
+      create_point(lat, lon, distance_left, distance_source)
+    end
+
+    created_midpoints = CustomPoint.where(:post_id=>self.id).order("distance_source")
+    tobeworked = Array.new
+
+    created_midpoints.each_with_index do |point, index|
+      next if index==0
+      done = false
+
+      subject = point
+      left_point = created_midpoints[index-1]
+
+      while !done
+        if(subject.distance_left >= 5)
+          co1 = [subject.latitude, subject.longitude]
+          co2 = [left_point.latitude, left_point.longitude]
+          midpoints = Geocoder::Calculations.geographic_center(co1, co2)
+          left = Geocoder::Calculations.distance_between(co1[0], co1[1], co2[0], co2[1])
+          source = self.addresses.first.distance_to(co2[0], co2[1])
+          subject = create_point(midpoints[0], midpoints[1], left, source)
+          tobeworked.push(subject)
+        elsif tobeworked.any?
+          tobeworked.each_with_index do |new, i|
+            if index==0
+              tobeworked.pop
+              next
+            end
+            left_point = subject
+            subject = tobeworked.pop
+          end
+        end
+      end
+    end
+    
+  end
+
 
   private_class_method :search_through_addresses, :check_address, :check_street ,:check_city, :check_zip
 
