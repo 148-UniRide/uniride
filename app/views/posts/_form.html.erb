@@ -34,7 +34,6 @@
     <%elsif address.index==1%>
       <h4>Destination</h4>
     <%else%>
-<<<<<<< HEAD
       <h4>
       Detour - <%= address.index-1 %>
       </h4>
@@ -42,16 +41,6 @@
     <%= render 'address_fields', f: address, init_field: true, editing: editing, i: address.index %>
   <% end %>
   <h5 class='links'>
-=======
-
-    <h4>Destination</h4>
-    <%end%>
-    <%= render 'address_fields', f: address, init_field: true %>
-    <% end %>
-
-  <h5>Detours</h5>
-  <div class='links'>
->>>>>>> 751e282313bd27a7fe0b91fb0bfa08fb5586e562
     <%= link_to_add_association 'add detour', f, :addresses%>
   </h5>
   <div class="actions">
