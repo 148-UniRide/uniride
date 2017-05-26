@@ -18,7 +18,7 @@
 
 				<% if current_user %>
 				<h2><span style="font-weight:bold"><%= first_letter_uppercase current_user.firstName%> <%= current_user.lastName%></span><br> Where do you want to go today?</p>
-				<p><%= link_to "Post a Trip", new_post_url, :class=>"button special"%> <%= link_to "Look for a ride", new_post_url, :class=>"button special"%></p>
+				<p><%= link_to "Post a Trip", new_post_url, :class=>"button special"%> <%= link_to "Look for a ride", search_path, :class=>"button special"%></p>
 				<%end%>
 
 				<%unless user_signed_in? %>
@@ -36,33 +36,33 @@
 			<!-- <section id="one" class="wrapper special">
 				<div class="inner">
 					<header class="major">
-						<h2>Lorem ipsum feugiat tempus</h2>
+						<h2>Let's Ride with UniRide</h2>
 					</header>
 					<div class="features">
 						<div class="feature">
 							<i class="fa fa-university"></i>
-							<h3>Etiam consequat</h3>
-							<p>Sed tempus feugiat adipiscing nisl cursus aliquam dolore.</p>
+							<h3>College Student Driver</h3>
+							<p>All driver and passanger are all college student.</p>
 						</div>
 						<div class="feature">
 							<i class="fa fa-users"></i>
-							<h3>Sed adipiscing</h3>
-							<p>Sed tempus feugiat adipiscing nisl cursus aliquam dolore.</p>
+							<h3>Meet And Connect</h3>
+							<p>By using uniride you have the chance to meet new friends and build up your connection with other college students.</p>
 						</div>
 						<div class="feature">
 							<i class="fa fa-car"></i>
-							<h3>Feugiat nullam</h3>
-							<p>Sed tempus feugiat adipiscing nisl cursus aliquam dolore.</p>
+							<h3>Split the Gas</h3>
+							<p>When you drive with somebody else, you can save more.</p>
 						</div>
 						<div class="feature">
 							<i class="fa fa-envelope-o"></i>
-							<h3>Amet imperdiet</h3>
-							<p>Sed tempus feugiat adipiscing nisl cursus aliquam dolore.</p>
+							<h3>Send Message</h3>
+							<p>You can send messages by peer to peer message application via Uniride application.</p>
 						</div>
 						<div class="feature">
 							<i class="fa fa-smile-o"></i>
-							<h3>Tempus lorem</h3>
-							<p>Sed tempus feugiat adipiscing nisl cursus aliquam dolore.</p>
+							<h3>Smile</h3>
+							<p>By meet new connections, new friends, and save your pocket more and more, riding with Uniride will always makes you smile.</p>
 						</div>
 					</div>
 				</div>

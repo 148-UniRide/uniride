@@ -2,21 +2,18 @@
 <div class="row">
 	<div class="spacer"></div>
 	<div class="six columns">
-		<button><%= link_to "Compose", new_conversation_path %></button>
+		<%= link_to "Compose", new_conversation_path, :class=> "button" %>
 		<div class="six columns.u-pull-right">
 			<% if conversation.is_trashed?(current_user) %>
-				<button><% link_to "Untrash", untrash_conversation_path(conversation), method: :post %></button>
+				<%= link_to "Untrash", untrash_conversation_path(conversation), method: :post, :class=> "button" %>
 			<% else %>
-				<button><%= link_to "Move to trash", trash_conversation_path(conversation), method: :post,
-						data: { confirm: "Are you sure?" } %> </button>
+				<%= link_to "Move to trash", trash_conversation_path(conversation), method: :post,
+						data: { confirm: "Are you sure?" }, :class=> "button" %>
 			<% end %>
 
 		</div>
 	</div>
 
-	<div class="four columns">
-		<%= render 'mailbox/folders' %>
-	</div>
 
 	<div class="eight columns" >
 		<%= render partial: "messages" %>

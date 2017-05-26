@@ -1,10 +1,22 @@
+
+<div class="wrapper">
 <% @receipts.each do |receipt| %>
 	<% message = receipt.message %>
-	<h3><%= message.sender.fullname %> <br>
-	<small><b>Subject: </b><%= message.subject %> </small><br>
-	<small><b>Date: </b><%= message.created_at.strftime("%A, %b, %d, %Y at %I:%M%p") %></small>
-	</h3>
+	<h5><strong><%= message.sender.fullname %></strong> <br>
+	<small>
+	<b>Subject: </b><%= message.subject %> </small><br>
+	
+	<small>
+	<b>Date:</b>
+	<%= message.created_at.strftime("%A, %b %d %Y") %>
+	<br>
+	<b>Time:</b>
+	<%= message.created_at.strftime("%I:%M %p") %>
+	</small>
+	</h5>
 
+	<h4>
 	<%= message.body %>
-
+	</h4>
 <% end %>
+</div>
