@@ -3,8 +3,9 @@ class PostsController < ApplicationController
 
   def search
     #@date_test = params.to_unsafe_h.slice(:date)
-    @search_results = Post.search(params[:street1], params[:city1], params[:zip1], 
-      params[:street2], params[:city2], params[:zip2])
+
+    @search_results = Post.search_coordinates(params[:street1], params[:city1], params[:state1],
+      params[:street2], params[:city2], params[:state2])
   end
 
   # GET /posts
@@ -24,7 +25,6 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    @get_distance = @post.get_distance
     @addresses = @post.addresses
     @iframe_src = @post.set_iframe_src
   end

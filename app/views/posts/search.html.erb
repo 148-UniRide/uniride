@@ -4,30 +4,30 @@
 		<div class="one-half column">
 		<h3>From</h3>
 			<label>Street:</label>
-			<%= text_field_tag :street1, params[:street1]%>
+			<%= text_field_tag :street1, (params[:street1] or "")%>
 			<div class="row">
 				<div class="eight columns">
 					<label>City:</label>
-					<%= text_field_tag :city1, params[:city1]%>
+					<%= text_field_tag :city1, (params[:city1] or "")%>
 				</div>
 				<div class="four columns">
-					<label>Zip:</label>
-					<%= text_field_tag :zip1, params[:zip1]%>
+					<label>State:</label>
+					<%= text_field_tag :state1, (params[:state1] or "")%>
 				</div>
 			</div>
 		</div>
 		<div class="one-half column">
 		<h3>To</h3>
 			<label>Street:</label>
-			<%= text_field_tag :street2, params[:street2]%>
+			<%= text_field_tag :street2, (params[:street2] or "")%>
 			<div class="row">
 				<div class="eight columns">
 					<label>City:</label>
-					<%= text_field_tag :city2, params[:city2]%>
+					<%= text_field_tag :city2, (params[:city2] or "")%>
 				</div>
 				<div class="four columns">
-					<label>Zip:</label>
-					<%= text_field_tag :zip2, params[:zip2]%>
+					<label>State:</label>
+					<%= text_field_tag :state2, (params[:state2] or "")%>
 				</div>
 			</div>
 		</div>

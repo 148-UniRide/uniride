@@ -3,51 +3,14 @@ class Post < ApplicationRecord
 	has_many :addresses, :dependent => :destroy, inverse_of: :post
 	has_many :comments
   has_many :custom_points
-  #after_create :set_first_points
   after_save :get_midpoints
   
 
 	accepts_nested_attributes_for :addresses, 
 	:allow_destroy => true, :reject_if => :all_blank
-  $test="nil"
-
-  def addresses_check?
-    changed = false
-    self.addresses.each do |address|
-      changed = true if address.street_changed? || address.city_changed? || 
-      address.state_changed? || address.zip_changed? || self.addresses_count_changed?
-      break if changed
-    end
-    changed
-  end
 
   def create_point(lat, lon, dis_left, dis_sor)
     CustomPoint.create(latitude: lat, longitude: lon, distance_left: dis_left, distance_source: dis_sor, post_id: self.id)
-  end
-
-  private def set_first_points
-    self.addresses.each_with_index do |address, index|
-      address.has_point = true
-      lat = address.latitude
-      lon = address.longitude
-      distance_source = address.distance_to(self.addresses.first)
-      distance_left = address.distance_to(self.addresses[index-1]) unless index==0 || index == 1 || index == 2
-      distance_left = distance_source if index==2 || (index==1 && self.addresses.count==2)
-      distance_left = address.distance_to(self.addresses.last) if index==1 && self.addresses.count > 2
-      distance_left = 0 if index==0
-
-      create_point(lat, lon, distance_left, distance_source)
-    end
-  end
-
-  private def set_points
-    $test = "changed"
-    CustomPoint.where(:post_id=>self.id).destroy_all
-    set_first_points
-  end
-
-  def get_distance
-    $test
   end
 
   def set_iframe_src
@@ -97,7 +60,50 @@ class Post < ApplicationRecord
     detour_tag.nil? ? main_string = main_string + origin_tag + destination_tag : main_string = main_string + origin_tag + destination_tag + detour_tag
   end
 
-  def self.search(street1, city1, zip1, street2, city2, zip2)
+  def self.search_coordinates(street1, city1, state1, street2, city2, state2)
+    street1 = street1.to_s
+    city1 = city1.to_s
+    state1 = state1.to_s
+    zip1 = street2.to_s
+    city2 = city2.to_s
+    state2 = state2.to_s
+      search_results = Array.new
+    if (!street1.empty? && !city1.empty? && !state1.empty? && !street2.empty? && !city2.empty?  && !state2.empty?)
+      f = street1 + ", " + city1 + ", " + state1
+      s = street2 + ", " + city2 + ", " + state2
+      from = Geocoder.coordinates(f)
+      to = Geocoder.coordinates(s)
+      total_dis = 3
+      source_matched = false
+      destination_matched = false
+
+      Post.all.each do |post|
+        points = post.custom_points.order("distance_source")
+        points.each do |cp|
+          unless (destination_matched)
+            if(!source_matched)
+              dis1 = Geocoder::Calculations.distance_between([from[0], from[1]], [cp.latitude, cp.longitude])
+              if dis1<=3
+                source_matched = true
+              end
+            else
+              dis2 = Geocoder::Calculations.distance_between([to[0], to[1]], [cp.latitude, cp.longitude])
+              if(dis2<=3)
+                destination_matched=  true
+                search_results.push(post)
+                break
+              end
+            end
+          end
+        end
+        source_matched = false
+        destination_matched = false
+      end 
+    end
+    search_results
+  end
+
+  def self.search_string(street1, city1, zip1, street2, city2, zip2)
     street1.to_s.rstrip
     city1.to_s.rstrip
     zip1.to_s.rstrip
@@ -168,18 +174,35 @@ class Post < ApplicationRecord
     zip.nil? || zip.empty? ? false : address.zip==zip
   end
 
+  private def get_midpoints
+    if self.custom_points.any?
+      CustomPoint.where(:post_id=>self.id).destroy_all
+    end
+    if self.addresses.count == 2
+      get_midpoints2(self.addresses.first, self.addresses.second)
+    else
+      self.addresses.each_with_index do |address, index|
+        next if index==0 || index==1
+        get_midpoints2(self.addresses.first, address) if index==2
+        get_midpoints2(address, self.addresses.second) if index==self.addresses.count-1
+
+        get_midpoints2(self.addresses[index-1], address) if self.addresses.count!=3
+      end
+    end
+  end
+
     #code for finding midpoints
   #currently only checks for midpoints between source and destination
   $outArr = Array.new()
   $outArr2 = Array.new()
   $t = true
 
-  private def get_midpoints
-    lat1 = self.addresses[0].latitude
-    lon1 = self.addresses[0].longitude
+  private def get_midpoints2(address1, address2)
+    lat1 = address1.latitude
+    lon1 = address1.longitude
 
-    lat2 = self.addresses[1].latitude    
-    lon2 = self.addresses[1].longitude
+    lat2 = address2.latitude    
+    lon2 = address2.longitude
 
     @limit = 5.0
   
@@ -264,56 +287,6 @@ class Post < ApplicationRecord
       $t = false
     end
   end
-
-  def get_midpoints2
-
-    self.addresses.each_with_index do |address, index|
-      address.has_point = true
-      lat = address.latitude
-      lon = address.longitude
-      distance_source = address.distance_to(self.addresses.first)
-      distance_left = address.distance_to(self.addresses[index-1]) unless index==0 || index == 1 || index == 2
-      distance_left = distance_source if index==2 || (index==1 && self.addresses.count==2)
-      distance_left = address.distance_to(self.addresses.last) if index==1 && self.addresses.count > 2
-      distance_left = 0 if index==0
-
-      create_point(lat, lon, distance_left, distance_source)
-    end
-
-    created_midpoints = CustomPoint.where(:post_id=>self.id).order("distance_source")
-    tobeworked = Array.new
-
-    created_midpoints.each_with_index do |point, index|
-      next if index==0
-      done = false
-
-      subject = point
-      left_point = created_midpoints[index-1]
-
-      while !done
-        if(subject.distance_left >= 5)
-          co1 = [subject.latitude, subject.longitude]
-          co2 = [left_point.latitude, left_point.longitude]
-          midpoints = Geocoder::Calculations.geographic_center(co1, co2)
-          left = Geocoder::Calculations.distance_between(co1[0], co1[1], co2[0], co2[1])
-          source = self.addresses.first.distance_to(co2[0], co2[1])
-          subject = create_point(midpoints[0], midpoints[1], left, source)
-          tobeworked.push(subject)
-        elsif tobeworked.any?
-          tobeworked.each_with_index do |new, i|
-            if index==0
-              tobeworked.pop
-              next
-            end
-            left_point = subject
-            subject = tobeworked.pop
-          end
-        end
-      end
-    end
-    
-  end
-
 
   private_class_method :search_through_addresses, :check_address, :check_street ,:check_city, :check_zip
 
