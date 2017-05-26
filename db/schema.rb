@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524081742) do
+ActiveRecord::Schema.define(version: 20170525213619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 20170524081742) do
   create_table "custom_points", force: :cascade do |t|
     t.float    "latitude"
     t.float    "longitude"
-    t.integer  "distance_left"
-    t.integer  "distance_source"
+    t.float    "distance_left"
+    t.float    "distance_source"
     t.integer  "post_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false

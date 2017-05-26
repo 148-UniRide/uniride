@@ -181,38 +181,46 @@ class Post < ApplicationRecord
     lat2 = self.addresses[1].latitude    
     lon2 = self.addresses[1].longitude
 
-    @limit = 5
+    @limit = 5.0
   
     @dis = self.addresses.first.distance_to(self.addresses.second)
 
     latLon = CustomPoint.new()
-
-    t = 0
     
     #source
-    point1 = create_point(lat1, lon1, 0, 0)
+    point1 = create_point(lat1, lon1, 0.0, 0.0)
 
     $outArr.push(point1)
 
     #destination
-    point2 = create_point(lat2, lon2, 0, @dis)
+    point2 = create_point(lat2, lon2, 0.0, @dis)
 
     $outArr.push(point2)
-    $outArr2 = $outArr
+    $outArr2 = $outArr.clone
    
     t1 = $outArr.count
 
     if @dis >= @limit
       while ($t)
-        i = 0 
+       
+        i = 0
         while  (i < t1 - 1)
+          print ">Value of t1 is:- #{t1} and i is #{i} \n"
+          print ">Distance source at index #{i}: #{$outArr[i].distance_source}\n"
           cal_midpoint($outArr[i].latitude, $outArr[i].longitude,
              $outArr[i+1].latitude, $outArr[i+1].longitude,
-              self.addresses.first, i)
+              self.addresses.first)
           #$outArr.sort_by {|obj| obj.distance_source}          
           i += 1
         end
-        $outArr = $outArr2
+
+        puts $outArr.inspect
+        print "---->Value of t1 is:- #{t1} and i is #{i}\n"
+        if ($t == false)
+          print "****OutLoop will stop now******\n"
+        end
+        $outArr.clear
+        $outArr = $outArr2.clone
         t1 = $outArr.count
       end  
     end
@@ -221,7 +229,9 @@ class Post < ApplicationRecord
     dis = Geocoder::Calculations.distance_between([$outArr[i].latitude, $outArr[i].longitude], [$outArr[i - 1].latitude, $outArr[i - 1].longitude])
     $outArr[i].distance_left = dis
     
-    $outArr.each do |cp|
+    $outArr.each_with_index do |cp, index|
+      next if index==0
+      cp.distance_left = Geocoder::Calculations.distance_between([cp.latitude, cp.longitude], [$outArr[index-1].latitude, $outArr[index-1].longitude])
       cp.save
     end
 
@@ -233,7 +243,7 @@ class Post < ApplicationRecord
 
   
   #This method calculates and stores the midpoints in the table
-  def cal_midpoint(lat1, lon1, lat2, lon2, sou, index)
+  def cal_midpoint(lat1, lon1, lat2, lon2, sou)
     midpoint = Geocoder::Calculations.geographic_center([[lat1, lon1], [lat2, lon2]])
     lat3 = midpoint[0]
     lon3 = midpoint[1]
@@ -243,7 +253,7 @@ class Post < ApplicationRecord
     mid_temp.latitude = lat3
     mid_temp.longitude = lon3
     mid_temp.distance_source = sou.distance_to([lat3, lon3])
-    mid_temp.distance_left = Geocoder::Calculations.distance_between([lat3, lon3], [$outArr[index].latitude, $outArr[index].longitude])
+    mid_temp.distance_left = Geocoder::Calculations.distance_between([lat1, lon1], [lat3, lon3])
     mid_temp.post_id = self.id
     $outArr2.push(mid_temp) 
     $outArr2.sort_by! {|obj| obj.distance_source}
